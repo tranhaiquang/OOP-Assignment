@@ -79,7 +79,6 @@ public class TransactionProcessing {
     // Requirement 5
     public ArrayList<IDCard> getCustomersHaveBoth() {
         ArrayList<IDCard> customersHaveBoth = new ArrayList<IDCard>();
-        
 
         for (IDCard card : idcm.getIDCards()) {
             int counter = 0;
@@ -115,7 +114,7 @@ public class TransactionProcessing {
 
     // Requirement 6
     public void processTopUp(String path) {
-        // code here
+        System.out.println("Hello World");
     }
 
     // Requirement 7
