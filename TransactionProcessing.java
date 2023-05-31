@@ -37,7 +37,7 @@ public class TransactionProcessing {
                             if (idc.getCardNumber() == Integer.parseInt(arr[0])) {
                                 try {
                                     Payment cc = new ConvenientCard(idc);
-                                    
+
                                     paymentObjects.add(cc);
                                 } catch (CannotCreateCard e) {
                                     System.out.println(e);
@@ -63,8 +63,17 @@ public class TransactionProcessing {
 
     // Requirement 4
     public ArrayList<ConvenientCard> getAdultConvenientCards() {
-        // code here
-        return null;
+        ArrayList<ConvenientCard> adultConvenientCards = new ArrayList<ConvenientCard>();
+
+        for (Payment p : paymentObjects) {
+            if (p instanceof ConvenientCard) {
+                ConvenientCard temp = (ConvenientCard) p;
+                if (temp.getType() == "Adult")
+                    adultConvenientCards.add(temp);
+            }
+
+        }
+        return adultConvenientCards;
     }
 
     // Requirement 5
