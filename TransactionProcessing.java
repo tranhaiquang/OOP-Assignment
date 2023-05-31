@@ -78,8 +78,39 @@ public class TransactionProcessing {
 
     // Requirement 5
     public ArrayList<IDCard> getCustomersHaveBoth() {
-        // code here
-        return null;
+        ArrayList<IDCard> customersHaveBoth = new ArrayList<IDCard>();
+        
+
+        for (IDCard card : idcm.getIDCards()) {
+            int counter = 0;
+            for (Payment p : paymentObjects) {
+                if (p instanceof ConvenientCard) {
+                    ConvenientCard temp = (ConvenientCard) p;
+                    if (temp.getIdCard().getCardNumber() == card.getCardNumber())
+                        counter++;
+                }
+
+                if (p instanceof EWallet) {
+                    EWallet temp = (EWallet) p;
+                    if (temp.getPhone() == card.getPhone())
+                        counter++;
+                }
+
+                if (p instanceof BankAccount) {
+                    BankAccount temp = (BankAccount) p;
+                    if (temp.getNumber() == card.getCardNumber())
+                        counter++;
+                }
+
+                if (counter == 3) {
+                    customersHaveBoth.add(card);
+                    counter = 0;
+                }
+
+            }
+        }
+
+        return customersHaveBoth;
     }
 
     // Requirement 6
