@@ -48,4 +48,8 @@ public class BankAccount implements Payment, Transfer {
                 this.balance;
 
     }
+
+    public int getNumber() {
+        return this.number;
+    }
 }
