@@ -56,4 +56,8 @@ public class ConvenientCard implements Payment {
 	public int getYear(String dob) {
 		return Integer.valueOf(dob.substring(dob.length() - 4));
 	}
+
+	public IDCard getIdCard() {
+		return this.idCard;
+	}
 }
