@@ -35,4 +35,8 @@ public class EWallet implements Payment, Transfer {
 				+this.balance;
 
 	}
+
+	public int getPhone() {
+		return this.phone;
+	}
 }
