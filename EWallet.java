@@ -34,7 +34,11 @@ public class EWallet implements Payment, Transfer {
 
 	@Override
 	public boolean pay(double amount) {
-		return false;
+		if (this.balance >= amount) {
+			this.balance -= amount;
+			return true;
+		} else
+			return false;
 	}
 
 	@Override

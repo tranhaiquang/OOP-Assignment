@@ -168,7 +168,57 @@ public class TransactionProcessing {
 
     // Requirement 7
     public ArrayList<Bill> getUnsuccessfulTransactions(String path) {
-        // code here
+        ArrayList<Bill> bill = new ArrayList<Bill>();
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] arr = data.split(",");
+
+                if (arr[0].equals("CC")) {
+                    for (Payment p : paymentObjects) {
+
+                        if (p instanceof ConvenientCard) {
+                            ConvenientCard temp = (ConvenientCard) p;
+                            if (temp.getIdCard().getCardNumber() == Integer.parseInt(arr[1])) {
+                                temp.topUp(Integer.parseInt(arr[2]));
+                                break;
+                            }
+
+                        }
+                    }
+                }
+
+                else if (arr[0].equals("BA")) {
+                    for (Payment p : paymentObjects) {
+                        if (p instanceof BankAccount) {
+                            BankAccount temp = (BankAccount) p;
+                            if (temp.getNumber() == Integer.parseInt(arr[1])) {
+                                temp.topUp(Double.parseDouble(arr[2]));
+                                break;
+                            }
+                        }
+                    }
+                } else if (arr[0].equals("EW")) {
+                    for (Payment p : paymentObjects) {
+                        if (p instanceof EWallet) {
+                            EWallet temp = (EWallet) p;
+                            if (temp.getPhone() == Integer.parseInt(arr[1])) {
+                                temp.topUp(Integer.parseInt(arr[2]));
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+
+        }
         return null;
     }
 
