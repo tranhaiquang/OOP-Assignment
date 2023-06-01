@@ -11,7 +11,7 @@ public class BankAccount implements Payment, Transfer {
 
     @Override
     public boolean transfer(double amount, Transfer to) {
-        double totalAmount = amount + amount * to.transferFee;
+        double totalAmount = amount + amount * Transfer.transferFee;
 
         if (totalAmount + 50 <= this.balance) {
             if (to instanceof EWallet) {
