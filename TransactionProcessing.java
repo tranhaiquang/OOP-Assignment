@@ -68,7 +68,7 @@ public class TransactionProcessing {
         for (Payment p : paymentObjects) {
             if (p instanceof ConvenientCard) {
                 ConvenientCard temp = (ConvenientCard) p;
-                if (temp.getType() == "Adult")
+                if (temp.getType().equals("Adult"))
                     adultConvenientCards.add(temp);
             }
 
@@ -114,7 +114,56 @@ public class TransactionProcessing {
 
     // Requirement 6
     public void processTopUp(String path) {
-        System.out.println("Hello World");
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] arr = data.split(",");
+
+                if (arr[0].equals("CC")) {
+                    for (Payment p : paymentObjects) {
+
+                        if (p instanceof ConvenientCard) {
+                            ConvenientCard temp = (ConvenientCard) p;
+                            if (temp.getIdCard().getCardNumber() == Integer.parseInt(arr[1])) {
+                                temp.deposit(Integer.parseInt(arr[2]));
+                                break;
+                            }
+
+                        }
+                    }
+                }
+
+                else if (arr[0].equals("BA")) {
+                    for (Payment p : paymentObjects) {
+                        if (p instanceof BankAccount) {
+                            BankAccount temp = (BankAccount) p;
+                            if (temp.getNumber() == Integer.parseInt(arr[1])) {
+                                temp.deposit(Double.parseDouble(arr[2]));
+                                break;
+                            }
+                        }
+                    }
+                } else if (arr[0].equals("EW")) {
+                    for (Payment p : paymentObjects) {
+                        if (p instanceof EWallet) {
+                            EWallet temp = (EWallet) p;
+                            if (temp.getPhone() == Integer.parseInt(arr[1])) {
+                                temp.deposit(Integer.parseInt(arr[2]));
+                                break;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+
+        }
     }
 
     // Requirement 7
