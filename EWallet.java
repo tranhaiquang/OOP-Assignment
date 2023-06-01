@@ -36,6 +36,9 @@ public class EWallet implements Payment, Transfer {
 
 	}
 
+	public void deposit(double amount) {
+		this.balance += amount;
+	}
 	public int getPhone() {
 		return this.phone;
 	}
