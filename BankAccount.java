@@ -31,13 +31,9 @@ public class BankAccount implements Payment, Transfer {
         return false;
     }
 
-    public boolean deposit(double amount) {
-        if (amount > this.balance)
-            return false;
-        else {
-            this.balance += amount;
-            return true;
-        }
+    public void deposit(double amount) {
+
+        this.balance += amount;
 
     }
 
