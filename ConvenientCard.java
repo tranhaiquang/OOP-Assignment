@@ -25,8 +25,13 @@ public class ConvenientCard implements Payment {
 
 	@Override
 	public boolean pay(double amount) {
-		if (this.balance >= amount) {
-			this.balance -= amount;
+		double newAmount = 0;
+		if (this.type.equals("Student"))
+			newAmount = amount;
+		else 
+			newAmount = amount + amount * 0.01;
+		if (this.balance >= newAmount) {
+			this.balance -= newAmount;
 			return true;
 		} else
 			return false;

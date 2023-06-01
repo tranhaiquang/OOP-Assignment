@@ -36,7 +36,7 @@ public class BankAccount implements Payment, Transfer {
 
     @Override
     public boolean pay(double amount) {
-        if (this.balance >= amount) {
+        if (this.balance >= amount + 50) {
             this.balance -= amount;
             return true;
         }

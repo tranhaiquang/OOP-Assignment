@@ -168,7 +168,7 @@ public class TransactionProcessing {
 
     // Requirement 7
     public ArrayList<Bill> getUnsuccessfulTransactions(String path) {
-        ArrayList<Bill> bill = new ArrayList<Bill>();
+        ArrayList<Bill> unsuccessfulBill = new ArrayList<Bill>();
         try {
             File myObj = new File(path);
             Scanner myReader = new Scanner(myObj);
@@ -176,46 +176,54 @@ public class TransactionProcessing {
                 String data = myReader.nextLine();
                 String[] arr = data.split(",");
 
-                if (arr[0].equals("CC")) {
-                    for (Payment p : paymentObjects) {
+                for (Payment p : paymentObjects) {
+                    switch (arr[3]) {
+                        case "BA":
+                            if (p instanceof BankAccount) {
+                                BankAccount tempBA = (BankAccount) p;
+                                if (tempBA.getNumber() == Integer.parseInt(arr[4])) {
+                                    if (!tempBA.pay(Double.parseDouble(arr[1]))) {
+                                        Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]),
+                                                arr[2]);
+                                        unsuccessfulBill.add(bill);
+                                    }
+                                }
 
-                        if (p instanceof ConvenientCard) {
-                            ConvenientCard temp = (ConvenientCard) p;
-                            if (temp.getIdCard().getCardNumber() == Integer.parseInt(arr[1])) {
-                                temp.topUp(Integer.parseInt(arr[2]));
-                                break;
                             }
+                            break;
+                        case "EW":
+                            if (p instanceof EWallet) {
+                                EWallet tempEW = (EWallet) p;
+                                if (tempEW.getPhone() == Integer.parseInt(arr[4])) {
+                                    if (!tempEW.pay(Double.parseDouble(arr[1]))) {
+                                        Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]),
+                                                arr[2]);
+                                        unsuccessfulBill.add(bill);
+                                    }
+                                }
+                            }
+                            break;
+                        case "CC":
+                            if (p instanceof ConvenientCard) {
+                                ConvenientCard tempCC = (ConvenientCard) p;
+                                if (tempCC.getIdCard().getCardNumber() == Integer.parseInt(arr[4])) {
+                                    if (!tempCC.pay(Double.parseDouble(arr[1]))) {
+                                        Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]),
+                                                arr[2]);
+                                        unsuccessfulBill.add(bill);
+                                    }
+                                }
 
-                        }
+                            }
+                            break;
                     }
-                }
 
-                else if (arr[0].equals("BA")) {
-                    for (Payment p : paymentObjects) {
-                        if (p instanceof BankAccount) {
-                            BankAccount temp = (BankAccount) p;
-                            if (temp.getNumber() == Integer.parseInt(arr[1])) {
-                                temp.topUp(Double.parseDouble(arr[2]));
-                                break;
-                            }
-                        }
-                    }
-                } else if (arr[0].equals("EW")) {
-                    for (Payment p : paymentObjects) {
-                        if (p instanceof EWallet) {
-                            EWallet temp = (EWallet) p;
-                            if (temp.getPhone() == Integer.parseInt(arr[1])) {
-                                temp.topUp(Integer.parseInt(arr[2]));
-                                break;
-                            }
-                        }
-                    }
                 }
 
             }
 
             myReader.close();
-
+            return unsuccessfulBill;
         } catch (FileNotFoundException e) {
 
         }
