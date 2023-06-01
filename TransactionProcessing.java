@@ -127,7 +127,7 @@ public class TransactionProcessing {
                         if (p instanceof ConvenientCard) {
                             ConvenientCard temp = (ConvenientCard) p;
                             if (temp.getIdCard().getCardNumber() == Integer.parseInt(arr[1])) {
-                                temp.deposit(Integer.parseInt(arr[2]));
+                                temp.topUp(Integer.parseInt(arr[2]));
                                 break;
                             }
 
@@ -140,7 +140,7 @@ public class TransactionProcessing {
                         if (p instanceof BankAccount) {
                             BankAccount temp = (BankAccount) p;
                             if (temp.getNumber() == Integer.parseInt(arr[1])) {
-                                temp.deposit(Double.parseDouble(arr[2]));
+                                temp.topUp(Double.parseDouble(arr[2]));
                                 break;
                             }
                         }
@@ -150,7 +150,7 @@ public class TransactionProcessing {
                         if (p instanceof EWallet) {
                             EWallet temp = (EWallet) p;
                             if (temp.getPhone() == Integer.parseInt(arr[1])) {
-                                temp.deposit(Integer.parseInt(arr[2]));
+                                temp.topUp(Integer.parseInt(arr[2]));
                                 break;
                             }
                         }

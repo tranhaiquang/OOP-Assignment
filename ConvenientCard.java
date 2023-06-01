@@ -33,7 +33,7 @@ public class ConvenientCard implements Payment {
 		return this.balance;
 	}
 
-	public void deposit(double amount) {
+	public void topUp(double amount) {
 		this.balance += amount;
 	}
 

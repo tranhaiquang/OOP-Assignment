@@ -14,8 +14,16 @@ public class BankAccount implements Payment, Transfer {
         double totalAmount = amount + amount * to.transferFee;
 
         if (totalAmount + 50 <= this.balance) {
-            this.balance -= totalAmount;
-            // topUp(amount);
+            if (to instanceof EWallet) {
+                EWallet temp = (EWallet) to;
+                temp.topUp(amount);
+                this.balance -= totalAmount;
+            } else if (to instanceof BankAccount) {
+                BankAccount temp = (BankAccount) to;
+                temp.topUp(amount);
+                this.balance -= totalAmount;
+            }
+            
             return true;
         } else
             return false;
@@ -31,7 +39,7 @@ public class BankAccount implements Payment, Transfer {
         return false;
     }
 
-    public void deposit(double amount) {
+    public void topUp(double amount) {
 
         this.balance += amount;
 
