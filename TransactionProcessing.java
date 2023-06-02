@@ -223,17 +223,65 @@ public class TransactionProcessing {
             }
 
             myReader.close();
-            return unsuccessfulBill;
+
         } catch (FileNotFoundException e) {
 
         }
-        return null;
+        return unsuccessfulBill;
     }
 
     // Requirement 8
     public ArrayList<BankAccount> getLargestPaymentByBA(String path) {
-        // code here
-        return null;
+        ArrayList<BankAccount> largestPayments = new ArrayList<BankAccount>();
+        Hashtable<String, Double> baPayments = new Hashtable<String, Double>();
+        double maxAmount = 0;
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] arr = data.split(",");
+                if (arr[3].equals("BA")) {
+                    if (baPayments.get(arr[4]) == null)
+                        baPayments.put(arr[4], Double.parseDouble(arr[1]));
+                    else
+                        baPayments.put(arr[4], baPayments.get(arr[4]) + Double.parseDouble(arr[1]));
+
+                }
+
+            }
+
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+
+        }
+        Set<String> keys = baPayments.keySet();
+        ArrayList<String> baNumber = new ArrayList<String>();
+
+        for (String key : keys) {
+            if (baPayments.get(key) > maxAmount)
+                maxAmount = baPayments.get(key);
+        }
+
+        for (String key : keys) {
+            if (baPayments.get(key) == maxAmount) {
+                baNumber.add(key);
+            }
+        }
+
+        for (String ba : baNumber) {
+            for (Payment p : paymentObjects) {
+                if (p instanceof BankAccount) {
+                    BankAccount temp = (BankAccount) p;
+                    largestPayments.add(temp);
+                    break;
+                }
+            }
+        }
+
+        return largestPayments;
     }
 
     // Requirement 9
