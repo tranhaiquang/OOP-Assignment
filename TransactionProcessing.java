@@ -40,7 +40,6 @@ public class TransactionProcessing {
 
                                     paymentObjects.add(cc);
                                 } catch (CannotCreateCard e) {
-                                    System.out.println(e);
                                 }
 
                             }
@@ -234,6 +233,7 @@ public class TransactionProcessing {
     public ArrayList<BankAccount> getLargestPaymentByBA(String path) {
         ArrayList<BankAccount> largestPayments = new ArrayList<BankAccount>();
         Hashtable<String, Double> baPayments = new Hashtable<String, Double>();
+        ArrayList<Bill> unsuccessfulBill = getUnsuccessfulTransactions(path);
         double maxAmount = 0;
         try {
             File myObj = new File(path);
@@ -242,12 +242,15 @@ public class TransactionProcessing {
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 String[] arr = data.split(",");
-                if (arr[3].equals("BA")) {
-                    if (baPayments.get(arr[4]) == null)
-                        baPayments.put(arr[4], Double.parseDouble(arr[1]));
-                    else
-                        baPayments.put(arr[4], baPayments.get(arr[4]) + Double.parseDouble(arr[1]));
+                Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]), arr[2]);
+                if (!unsuccessfulBill.contains(bill)) {
+                    if (arr[3].equals("BA")) {
+                        if (baPayments.get(arr[4]) == null)
+                            baPayments.put(arr[4], Double.parseDouble(arr[1]));
+                        else
+                            baPayments.put(arr[4], baPayments.get(arr[4]) + Double.parseDouble(arr[1]));
 
+                    }
                 }
 
             }
@@ -275,8 +278,11 @@ public class TransactionProcessing {
             for (Payment p : paymentObjects) {
                 if (p instanceof BankAccount) {
                     BankAccount temp = (BankAccount) p;
-                    largestPayments.add(temp);
-                    break;
+                    if (temp.getNumber() == Integer.parseInt(ba)) {
+                        largestPayments.add(temp);
+                        break;
+                    }
+
                 }
             }
         }
