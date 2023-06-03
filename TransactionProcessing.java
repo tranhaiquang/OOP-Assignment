@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.time.Year;
 
 public class TransactionProcessing {
     private ArrayList<Payment> paymentObjects;
@@ -186,6 +187,7 @@ public class TransactionProcessing {
                                                 arr[2]);
                                         unsuccessfulBill.add(bill);
                                     }
+                                    tempBA.topUp(Double.parseDouble(arr[1]));
                                 }
 
                             }
@@ -195,10 +197,13 @@ public class TransactionProcessing {
                                 EWallet tempEW = (EWallet) p;
                                 if (tempEW.getPhone() == Integer.parseInt(arr[4])) {
                                     if (!tempEW.pay(Double.parseDouble(arr[1]))) {
+
                                         Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]),
                                                 arr[2]);
                                         unsuccessfulBill.add(bill);
                                     }
+                                    tempEW.topUp(Double.parseDouble(arr[1]));
+
                                 }
                             }
                             break;
@@ -211,6 +216,8 @@ public class TransactionProcessing {
                                                 arr[2]);
                                         unsuccessfulBill.add(bill);
                                     }
+                                    tempCC.topUp(Double.parseDouble(arr[1]));
+
                                 }
 
                             }
@@ -292,6 +299,77 @@ public class TransactionProcessing {
 
     // Requirement 9
     public void processTransactionWithDiscount(String path) {
-        // code here
+        ArrayList<Bill> unsuccessfulBill = getUnsuccessfulTransactions(path);
+        try {
+            File myObj = new File(path);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+                String data = myReader.nextLine();
+                String[] arr = data.split(",");
+                Bill bill = new Bill(Integer.parseInt(arr[0]), Double.parseDouble(arr[1]), arr[2]);
+                if (!unsuccessfulBill.contains(bill)) {
+                    for (Payment p : paymentObjects) {
+                        
+                        switch (arr[3]) {
+                            case "BA":
+                                if (p instanceof BankAccount) {
+                                    BankAccount tempBA = (BankAccount) p;
+                                    if (tempBA.getNumber() == Integer.parseInt(arr[4])) {
+                                        System.out.println(tempBA.getNumber() + " " + tempBA.checkBalance() + " " + Double.parseDouble(arr[1]));
+                                        tempBA.pay(Double.parseDouble(arr[1]));
+
+                                    }
+                                        
+                                }
+                                break;
+                            case "EW":
+                                if (p instanceof EWallet) {
+                                    EWallet tempEW = (EWallet) p;
+                                    
+                                    if (tempEW.getPhone() == Integer.parseInt(arr[4])) {
+                                        boolean flag = false;
+                                        for (IDCard id : idcm.getIDCards()) {
+                                            if (id.getPhone() == tempEW.getPhone()) {
+                                                int year = Integer
+                                                        .valueOf(id.getDob().substring(id.getDob().length() - 4));
+                                                Year currentYear = Year.now();
+                                                int yearValue = currentYear.getValue();
+                                                int age = yearValue - year;
+                                                String gender = id.getGender();
+                                                if ((age < 18 & gender.equals("Female")
+                                                        | (age < 20 & gender.equals("Male"))))
+                                                    flag = true;
+                                            }
+
+                                        }
+                                        if (arr[2].equals("Clothing") & Double.parseDouble(arr[1]) > 500 & flag) {
+                                            tempEW.pay(Double.parseDouble(arr[1]) - Double.parseDouble(arr[1]) * 0.15);
+                                        } else
+                                            tempEW.pay(Double.parseDouble(arr[1]));
+
+                                    }
+                                }
+                                break;
+                            case "CC":
+                                if (p instanceof ConvenientCard) {
+                                    ConvenientCard tempCC = (ConvenientCard) p;
+                                    if (tempCC.getIdCard().getCardNumber() == Integer.parseInt(arr[4]))
+                                        tempCC.pay(Double.parseDouble(arr[1]));
+
+                                }
+                                break;
+                        }
+
+                    }
+                }
+
+            }
+
+            myReader.close();
+
+        } catch (FileNotFoundException e) {
+
+        }
+
     }
 }
